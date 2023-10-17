@@ -1,0 +1,56 @@
+# SDL generated files
+sdl2-config
+sdl2.pc
+
+# CMake files
+CMakeLists.txt.user
+CMakeCache.txt
+cmake_install.cmake
+CMakeFiles/
+build/
+
+# Compiled binaries
+bin/
+build/
+*.exe
+*.out
+*.app
+
+# Compiled libraries
+lib/
+*.so
+*.dylib
+*.dll
+*.a
+
+# Visual Studio Code settings (if you are using VS Code)
+.vscode/
+
+# Xcode settings (if you are using Xcode)
+*.xcodeproj/
+*.xcworkspace/
+
+# Code::Blocks settings (if you are using Code::Blocks)
+*.depend
+*.layout
+
+# Sublime Text settings (if you are using Sublime Text)
+*.sublime-workspace
+*.sublime-project
+
+# Other IDEs or tools specific files
+.idea/
+*.suo
+*.user
+*.userprefs
+*.sdf
+*.opensdf
+*.cproject
+*.cbp
+*.editorconfig
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
