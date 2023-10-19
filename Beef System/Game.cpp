@@ -16,6 +16,7 @@ SDL_Event Game::event;
 Manager manager;
 auto& player(manager.addEntity());
 auto& wall(manager.addEntity());
+auto& enemy(manager.addEntity());
 
 Game::Game()
 {}
@@ -57,11 +58,14 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	map = new Map();
 
 	player.addComponent<TransformComponent>();
+	player.addComponent<RotationComponent>();
 	player.addComponent<SpriteComponent>("assets/cars/player_car.png");
 	player.addComponent<KeyboardController>();
 	player.addComponent<ColliderComponent>("player");
 
-
+	enemy.addComponent<TransformComponent>(200, 200);
+	enemy.addComponent<SpriteComponent>("assets/cars/enemy_car.png");
+	enemy.addComponent<ColliderComponent>("enemy");
 
 	wall.addComponent<TransformComponent>(300.0f, 300.0f, 150, 300, 1);
 	wall.addComponent<SpriteComponent>("assets/environment/grass.png");
@@ -101,6 +105,11 @@ void Game::update()
 
 void Game::render()
 {
+	if (renderer == nullptr)
+	{
+			return;
+	}
+
 	SDL_RenderClear(renderer);
 	map->DrawMap();
 	manager.draw();
