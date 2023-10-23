@@ -1,7 +1,10 @@
 #include "Map.h"
 #include "TextureManager.h"
 
-int level1[20][25] = {
+constexpr int LEVELHEIGHT = 20;
+constexpr int LEVELWIDTH = 25;
+
+int level1[LEVELHEIGHT][LEVELWIDTH] = {
 	{0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 	{0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 	{0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -49,9 +52,9 @@ Map::~Map()
 
 void Map::LoadMap(int array[20][25])
 {
-	for (int row = 0; row < 20; row++)
+	for (int row = 0; row < LEVELHEIGHT; row++)
 	{
-		for (int column = 0; column < 25; column++)
+		for (int column = 0; column < LEVELWIDTH; column++)
 		{
 			map[row][column] = array[row][column];
 		}
@@ -62,9 +65,9 @@ void Map::DrawMap()
 {
 	int type = 0;
 	
-	for (int row = 0; row < 20; row++)
+	for (int row = 0; row < LEVELHEIGHT; row++)
 	{
-		for (int column = 0; column < 25; column++)
+		for (int column = 0; column < LEVELWIDTH; column++)
 		{
 			type = map[row][column];
 

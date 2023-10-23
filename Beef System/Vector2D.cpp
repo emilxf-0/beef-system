@@ -12,6 +12,17 @@ Vector2D::Vector2D(float x, float y)
 	this->y = y;
 }
 
+void Vector2D::normalize()
+{
+	float length = std::sqrt(x * x + y * y);
+
+	if (length != 0.0f)
+	{
+		x /= length;
+		y /= length;
+	}
+}
+
 Vector2D& Vector2D::Add(const Vector2D& vector)
 {
 	this->x += vector.x;

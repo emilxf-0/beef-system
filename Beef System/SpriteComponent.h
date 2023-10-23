@@ -1,6 +1,8 @@
 ﻿#pragma once
 
 #include "Components.h"
+#include "Game.h"
+#include "RotationComponent.h"
 #include "SDL.h"
 #include "TextureManager.h"
 
@@ -12,11 +14,13 @@ private:
 	SDL_Rect srcRect, destRect;
 
 public:
+	RotationComponent* rotation;
 
 	SpriteComponent() = default;
 
 	SpriteComponent(const char* path)
 	{
+		//this->renderer = renderer;
 		setTexture(path);
 	}
 
@@ -34,6 +38,12 @@ public:
 	{
 		transform = &entity->getComponent<TransformComponent>();
 
+		if (!entity->hasComponent<RotationComponent>())
+		{
+			entity->addComponent<RotationComponent>();
+		}
+		rotation = &entity->getComponent<RotationComponent>();
+
 		srcRect.x = srcRect.y = 0;
 		srcRect.w = transform->width;
 		srcRect.h = transform->height;
@@ -41,14 +51,14 @@ public:
 
 	void update() override
 	{
-		destRect.x = (int)transform->position.x;
-		destRect.y = (int)transform->position.y;
+		destRect.x = static_cast<int>(transform->position.x);
+		destRect.y = static_cast<int>(transform->position.y);
 		destRect.w = transform->width * transform->scale;
 		destRect.h = transform->height * transform->scale;
 	}
 
 	void draw() override
 	{
-		TextureManager::Draw(texture, srcRect, destRect);
+		TextureManager::Draw(texture, srcRect, destRect, rotation->angle, SDL_FLIP_NONE);
 	}
 };
