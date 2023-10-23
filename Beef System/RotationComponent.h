@@ -17,17 +17,19 @@ public:
 
 	RotationComponent() = default;
 
+	RotationComponent(double angle)
+	{
+		this->angle = angle;
+	}
+
 
 	void init() override
 	{
-		transform = &entity->getComponent<TransformComponent>();
-		rotationCenter = { transform->width / 2, transform->height / 2 };
-
-		std::cout << "rotation!" << std::endl;
+	
 	}
 
 	void update() override
 	{
-		angle += 1;
+		//angle += 1;
 	}
 };

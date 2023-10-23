@@ -144,7 +144,8 @@
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="KeyboardController.cpp" />
+    <ClCompile Include="Input.cpp" />
+    <ClCompile Include="Controller.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="TextureManager.cpp" />
@@ -157,7 +158,8 @@
     <ClInclude Include="EntityComponentSystem.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
-    <ClInclude Include="KeyboardController.h" />
+    <ClInclude Include="Input.h" />
+    <ClInclude Include="Controller.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="RotationComponent.h" />
     <ClInclude Include="TransformComponent.h" />
