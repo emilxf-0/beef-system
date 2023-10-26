@@ -15,6 +15,10 @@ public:
 
 	CharacterEntity() = default;
 
+	CharacterEntity(const std::string& sprite)
+	{
+		this->sprite = sprite;
+	}
 
 	void init() override
 	{

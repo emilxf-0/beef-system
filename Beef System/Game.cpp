@@ -17,7 +17,7 @@ Manager manager;
 auto& wall(manager.addEntity());
 auto& enemy(manager.addEntity());
 
-auto& player = manager.addEntity<CharacterEntity>();
+auto& player = manager.addEntity<CharacterEntity>("assets/cars/player_car.png");
 
 
 Game::Game()
