@@ -3,28 +3,27 @@
 #include "EntityComponentSystem.h"
 #include "Components.h"
 #include "Input.h"
+#include "Vector2D.h"
 
 class Controller : public Component
 {
 public:
 	TransformComponent* transform;
 	RotationComponent* rotation;
-	
+
 	const Uint8* keyBoardState = SDL_GetKeyboardState(nullptr);
 
-	Vector2D direction;
+	Vector2D direction = Vector2D(0, 0);
+	double angleInRadians = 0.0;
 
-	int speed = 3;
+	float const SPEED = 3;
+	float const ANGLE_INCREMENT = 1.0f;
 
 	enum drivingState
 	{
 		IDLE,
 		FORWARD,
 		REVERSE,
-		FWD_TURNING_LEFT,
-		FWD_TURNING_RIGHT,
-		R_TURNING_LEFT,
-		R_TURNING_RIGHT
 	};
 
 	drivingState drivingDirection;
@@ -38,31 +37,26 @@ public:
 
 	void update() override
 	{
-		auto angles = rotation->angle;
-		auto angleInRadians = angles * (M_PI / 180);
 
+		updateDirection();
+		updateRotation();
+		updateVelocity();
+	}
 
-		if(keyBoardState[SDL_SCANCODE_W] && keyBoardState[SDL_SCANCODE_D])
-		{
-			drivingDirection = FWD_TURNING_RIGHT;
-		}
-		else if(keyBoardState[SDL_SCANCODE_W] && keyBoardState[SDL_SCANCODE_A])
-		{
-			drivingDirection = FWD_TURNING_LEFT;
-		}
-		else if(keyBoardState[SDL_SCANCODE_S] && keyBoardState[SDL_SCANCODE_A])
-		{
-			drivingDirection = R_TURNING_LEFT;
-		}
-		else if(keyBoardState[SDL_SCANCODE_S] && keyBoardState[SDL_SCANCODE_D])
-		{
-			drivingDirection = R_TURNING_RIGHT;
-		}
-		else if(keyBoardState[SDL_SCANCODE_W])
+private:
+	void updateDirection()
+	{
+		angleInRadians = rotation->angle * (M_PI / 180);
+
+		direction.x = SDL_cos(angleInRadians);
+		direction.y = SDL_sin(angleInRadians);
+		direction.normalize();
+
+		if (keyBoardState[SDL_SCANCODE_W])
 		{
 			drivingDirection = FORWARD;
 		}
-		else if(keyBoardState[SDL_SCANCODE_S])
+		else if (keyBoardState[SDL_SCANCODE_S])
 		{
 			drivingDirection = REVERSE;
 		}
@@ -71,85 +65,44 @@ public:
 			drivingDirection = IDLE;
 		}
 
+	}
+
+	void updateRotation()
+	{
+		if (keyBoardState[SDL_SCANCODE_A])
+		{
+			rotation->angle -= ANGLE_INCREMENT;
+		}
+		else if (keyBoardState[SDL_SCANCODE_D])
+		{
+			rotation->angle += ANGLE_INCREMENT;
+		}
+	}
+
+	void updateVelocity()
+	{
+
 		switch (drivingDirection)
 		{
 		case IDLE:
-			std::cout << "standing still" << std::endl;
 			transform->velocity.x = 0;
 			transform->velocity.y = 0;
 			break;
 
 		case FORWARD:
-			direction.x = SDL_cos(angleInRadians);
-			direction.y = SDL_sin(angleInRadians);
-			direction.normalize();
-
-			transform->velocity.x = direction.x * speed;
-			transform->velocity.y = direction.y * speed;
+			transform->velocity.x = direction.x * SPEED;
+			transform->velocity.y = direction.y * SPEED;
 			break;
 
 		case REVERSE:
-			direction.x = SDL_cos(angleInRadians);
-			direction.y = SDL_sin(angleInRadians);
-			direction.normalize();
-
-			transform->velocity.x = -direction.x * speed;
-			transform->velocity.y = -direction.y * speed;
-			break;
-
-		case FWD_TURNING_LEFT:
-			direction.x = SDL_cos(angleInRadians);
-			direction.y = SDL_sin(angleInRadians);
-			direction.normalize();
-
-			transform->velocity.x = direction.x * speed;
-			transform->velocity.y = direction.y * speed;
-			
-			rotation->angle -= 1;
-			break;
-
-		case FWD_TURNING_RIGHT:
-			direction.x = SDL_cos(angleInRadians);
-			direction.y = SDL_sin(angleInRadians);
-			direction.normalize();
-
-			transform->velocity.x = direction.x * speed;
-			transform->velocity.y = direction.y * speed;
-			
-			rotation->angle += 1;
-			break;
-
-		case R_TURNING_LEFT:
-			direction.x = SDL_cos(angleInRadians);
-			direction.y = SDL_sin(angleInRadians);
-			direction.normalize();
-
-			transform->velocity.x = -direction.x * speed;
-			transform->velocity.y = -direction.y * speed;
-			
-			rotation->angle += 1;
-			break;
-
-		case R_TURNING_RIGHT:
-			direction.x = SDL_cos(angleInRadians);
-			direction.y = SDL_sin(angleInRadians);
-			direction.normalize();
-
-			transform->velocity.x = -direction.x * speed;
-			transform->velocity.y = -direction.y * speed;
-			
-			rotation->angle -= 1;
-			break;
-
-			std::cout << "backwards right" << std::endl;
+			transform->velocity.x = -direction.x * SPEED;
+			transform->velocity.y = -direction.y * SPEED;
 			break;
 
 		default:
 			break;
 		}
 
+	}
 
-	
-		}
 };
-
