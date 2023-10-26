@@ -71,10 +71,22 @@ private:
 	{
 		if (keyBoardState[SDL_SCANCODE_A])
 		{
+			if (drivingDirection == REVERSE)
+			{
+				rotation->angle += ANGLE_INCREMENT;
+				return;
+			}
+
 			rotation->angle -= ANGLE_INCREMENT;
+
 		}
 		else if (keyBoardState[SDL_SCANCODE_D])
 		{
+			if (drivingDirection == REVERSE)
+			{
+				rotation->angle -= ANGLE_INCREMENT;
+				return;
+			}
 			rotation->angle += ANGLE_INCREMENT;
 		}
 	}
