@@ -39,12 +39,14 @@ public:
 	virtual void update() {}
 	virtual void draw(float interpolation) {}
 
-	virtual ~Component() {}
+	virtual ~Component() = default;
 };
 
 class Entity
 {
 public:
+	virtual void init() {}
+
 	void update()
 	{
 		for (auto& component : components) component->update();
@@ -99,6 +101,11 @@ class Manager
 private: std::vector<std::unique_ptr<Entity>> entities;
 
 public:
+	void init()
+	{
+		for (auto& entity : entities) entity->init();
+	}
+
 	void update()
 	{
 		for (auto& entity : entities) entity->update();
