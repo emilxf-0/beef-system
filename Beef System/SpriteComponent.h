@@ -18,17 +18,17 @@ public:
 
 	SpriteComponent() = default;
 
-	SpriteComponent(const char* path)
+	SpriteComponent(std::string path)
 	{
 		setTexture(path);
 	}
 
-	~SpriteComponent()
+	~SpriteComponent() override
 	{
 		SDL_DestroyTexture(texture);
 	}
 
-	void setTexture(const char* path)
+	void setTexture(const std::string& path)
 	{
 		texture = TextureManager::LoadTexture(path);
 	}
