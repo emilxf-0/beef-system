@@ -10,6 +10,7 @@ public:
 
 	Vector2D position;
 	Vector2D velocity;
+	Vector2D lastPosition;
 
 	int height = 32;
 	int width = 32;
@@ -48,6 +49,7 @@ public:
 
 	void update() override
 	{
+		lastPosition = position;
 		position.x += velocity.x;
 		position.y += velocity.y;
 	}

@@ -20,7 +20,6 @@ public:
 
 	SpriteComponent(const char* path)
 	{
-		//this->renderer = renderer;
 		setTexture(path);
 	}
 
@@ -57,8 +56,16 @@ public:
 		destRect.h = transform->height * transform->scale;
 	}
 
-	void draw() override
+	void draw(float interpolation) override
 	{
+		int interpolatedX = static_cast<int>(transform->position.x * (1.0f - interpolation) +
+			(transform->lastPosition.x * interpolation));
+		int interpolatedY = static_cast<int>(transform->position.y * (1.0f - interpolation) +
+			(transform->lastPosition.y * interpolation));
+
+		destRect.x = interpolatedX;
+		destRect.y = interpolatedY;
+
 		TextureManager::Draw(texture, srcRect, destRect, rotation->angle, SDL_FLIP_NONE);
 	}
 };

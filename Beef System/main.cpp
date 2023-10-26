@@ -4,31 +4,39 @@ Game* game = nullptr;
 
 int main(int argc, char* argv[])
 {
-
 	const int FPS = 60;
-	const int frameDelay = 1000 / FPS;
+	const int MS_PER_UPDATE = 1000 / FPS;
 
-	Uint32 frameStart;
-	int frameTime;
+	Uint64 currentTime;
 
 	game = new Game();
 
 	game->init("Beef game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 640, false);
 
+	float previousTime = SDL_GetTicks64();
+	float lag = 0.0f;
+	float deltaTime = 0.0f;
+	float renderTime = 0.0f;
+
 	while (game->running())
 	{
-		frameStart = SDL_GetTicks();
+		currentTime = SDL_GetTicks64();
+		renderTime = currentTime - previousTime;
+
+		deltaTime = renderTime / 1000;
+
+		previousTime = currentTime;
+		lag += renderTime;
 
 		game->handleEvents();
-		game->update();
-		game->render();
 
-		frameTime = SDL_GetTicks() - frameStart;
-
-		if(frameDelay > frameTime)
+		while (lag >= MS_PER_UPDATE)
 		{
-			SDL_Delay(frameDelay - frameTime);
+			game->update(deltaTime);
+			lag -= MS_PER_UPDATE;
 		}
+
+		game->render(lag / MS_PER_UPDATE);
 	}
 
 	game->clean();

@@ -37,7 +37,7 @@ public:
 
 	virtual void init() {}
 	virtual void update() {}
-	virtual void draw() {}
+	virtual void draw(float interpolation) {}
 
 	virtual ~Component() {}
 };
@@ -50,9 +50,9 @@ public:
 		for (auto& component : components) component->update();
 	}
 
-	void draw()
+	void draw(float interpolation)
 	{
-		for (auto& component : components) component->draw();
+		for (auto& component : components) component->draw(interpolation);
 	}
 	bool isActive() const { return active; }
 	void destroy() { active = false; }
@@ -82,7 +82,7 @@ public:
 		auto ptr(componentArray[getComponentTypeID<T>()]);
 		return *static_cast<T*>(ptr);
 	}
-	
+
 
 private:
 	bool active = true;
@@ -91,7 +91,7 @@ private:
 	ComponentArray componentArray;
 	ComponentBitSet componentBitSet;
 
-	
+
 };
 
 class Manager
@@ -103,9 +103,9 @@ public:
 	{
 		for (auto& entity : entities) entity->update();
 	}
-	void draw()
+	void draw(float interpolation)
 	{
-		for (auto& entity : entities) entity->draw();
+		for (auto& entity : entities) entity->draw(interpolation);
 	}
 
 	void refresh()
@@ -121,10 +121,20 @@ public:
 	Entity& addEntity()
 	{
 		Entity* entity = new Entity();
-		std::unique_ptr<Entity> unique_ptr{entity};
+		std::unique_ptr<Entity> unique_ptr{ entity };
 		entities.emplace_back(std::move(unique_ptr));
 		return *entity;
 
 	}
 
+	template <typename EntityType, typename... Args>
+	EntityType& addEntity(Args&&... args)
+	{
+		EntityType* entity = new EntityType(std::forward<Args>(args)...);
+		std::unique_ptr<Entity> unique_ptr{ entity };
+		entities.emplace_back(std::move(unique_ptr));
+		return *entity;
+	}
+
 };
+

@@ -89,7 +89,7 @@ void Game::handleEvents()
 }
 
 
-void Game::update()
+void Game::update(float deltaTime)
 {
 	manager.refresh();
 	manager.update();
@@ -101,7 +101,7 @@ void Game::update()
 }
 
 
-void Game::render()
+void Game::render(float interpolation)
 {
 	if (renderer == nullptr)
 	{
@@ -110,7 +110,7 @@ void Game::render()
 
 	SDL_RenderClear(renderer);
 	map->DrawMap();
-	manager.draw();
+	manager.draw(interpolation);
 	SDL_RenderPresent(renderer);
 }
 

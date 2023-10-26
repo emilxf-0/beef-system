@@ -12,8 +12,8 @@ public:
 	void init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen);
 
 	void handleEvents();
-	void update();
-	void render();
+	void update(float deltaTime);
+	void render(float interpolate);
 	void clean();
 
 	bool running() { return isRunning; }
