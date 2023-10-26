@@ -1,6 +1,7 @@
 
 #include "Game.h"
 
+#include "CharacterEntity.h"
 #include "ColliderComponent.h"
 #include "Map.h"
 #include "Components.h"
@@ -12,9 +13,12 @@ SDL_Renderer* Game::renderer = nullptr;
 SDL_Event Game::event;
 
 Manager manager;
-auto& player(manager.addEntity());
+
 auto& wall(manager.addEntity());
 auto& enemy(manager.addEntity());
+
+auto& player = manager.addEntity<CharacterEntity>();
+
 
 Game::Game()
 {}
@@ -52,14 +56,9 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		isRunning = true;
 	}
 
-
 	map = new Map();
 
-	player.addComponent<TransformComponent>();
-	player.addComponent<RotationComponent>(90);
-	player.addComponent<SpriteComponent>("assets/cars/player_car.png");
-	player.addComponent<Controller>();
-	player.addComponent<ColliderComponent>("player");
+	manager.init();
 
 	enemy.addComponent<TransformComponent>(200, 200);
 	enemy.addComponent<SpriteComponent>("assets/cars/enemy_car.png");
@@ -68,6 +67,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	wall.addComponent<TransformComponent>(300.0f, 300.0f, 150, 300, 1);
 	wall.addComponent<SpriteComponent>("assets/environment/grass.png");
 	wall.addComponent<ColliderComponent>("wall");
+
 }
 
 
