@@ -33,8 +33,18 @@ public:
 		texture = TextureManager::LoadTexture(path);
 	}
 
+	void setTexture(SDL_Texture* newTexture)
+	{
+		this->texture = newTexture;
+	}
+
 	void init() override
 	{
+		if (!entity->hasComponent<TransformComponent>())
+		{
+			entity->addComponent<TransformComponent>();
+		}
+
 		transform = &entity->getComponent<TransformComponent>();
 
 		if (!entity->hasComponent<RotationComponent>())
@@ -67,5 +77,10 @@ public:
 		destRect.y = interpolatedY;
 
 		TextureManager::Draw(texture, srcRect, destRect, rotation->angle, SDL_FLIP_NONE);
+	}
+
+	SDL_Texture* getTexture()
+	{
+		return texture;
 	}
 };
