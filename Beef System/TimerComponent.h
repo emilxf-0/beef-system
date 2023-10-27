@@ -5,12 +5,16 @@
 class TimerComponent :
     public Component
 {
+private:
+    const int CONVERT_TO_MILLISECONDS = 1000;
+
+
 public:
     bool timerDone;
-    float startTime = 0.0f;
-    float currentTime = 0.0f;
-    float timeInSeconds = 0.0f;
-    float timer = 4.0f;
+    Uint64 startTime = 0;
+    Uint64 currentTime = 0;
+    Uint64 timeInSeconds = 0;
+    Uint64 timer = 1;
 
     TimerComponent() = default;
 
@@ -23,15 +27,15 @@ public:
     {
         timerDone = false;
     	currentTime = SDL_GetTicks64();
-        timeInSeconds = (currentTime - startTime) / 1000;
+        timeInSeconds = currentTime - startTime;
 
        
-	    if (timeInSeconds >= timer)
+	    if (timeInSeconds >= timer * CONVERT_TO_MILLISECONDS)
 	    {
 
             std::cout << "Beep beep" << std::endl;
             timerDone = true;
-	    	startTime = SDL_GetTicks64();
+            startTime = currentTime;
 	    }
     }
 };
