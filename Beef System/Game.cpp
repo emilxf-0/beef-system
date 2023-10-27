@@ -7,6 +7,7 @@
 #include "Components.h"
 #include "Collision.h"
 #include "TimerComponent.h"
+#include "TrafficLightEntity.h"
 
 Map* map;
 
@@ -17,7 +18,7 @@ Manager manager;
 
 auto& wall(manager.addEntity());
 auto& enemy(manager.addEntity());
-auto& trafficLight(manager.addEntity());
+auto& trafficLight = manager.addEntity<TrafficLightEntity>();
 
 auto& player = manager.addEntity<CharacterEntity>("assets/cars/player_car.png");
 
@@ -70,10 +71,6 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	wall.addComponent<SpriteComponent>("assets/environment/grass.png");
 	wall.addComponent<ColliderComponent>("wall");
 
-	trafficLight.addComponent<TransformComponent>(120, 120);
-	trafficLight.addComponent<SpriteComponent>("assets/props/red_light.png");
-	trafficLight.addComponent<TimerComponent>();
-
 }
 
 
@@ -103,12 +100,12 @@ void Game::update(float deltaTime)
 	if (Collision::AABB(player.getComponent<ColliderComponent>().collider, wall.getComponent<ColliderComponent>().collider))
 	{
 		player.getComponent<TransformComponent>().scale = 10;
+		trafficLight.switchToNextColor();
 	}
 
 	if (trafficLight.getComponent<TimerComponent>().timerDone)
 	{
-		std::cout << "all is well" << std::endl;
-		trafficLight.getComponent<SpriteComponent>().setTexture("assets/props/yellow_light.png");
+		trafficLight.switchToNextColor();
 	}
 }
 
