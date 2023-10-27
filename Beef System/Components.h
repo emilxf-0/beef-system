@@ -5,3 +5,4 @@
 #include "SpriteComponent.h"
 #include "Controller.h"
 #include "ColliderComponent.h"
+#include "TimerComponent.h"
