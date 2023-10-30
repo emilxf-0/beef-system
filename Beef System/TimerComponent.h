@@ -10,13 +10,18 @@ private:
 
 
 public:
-    bool timerDone;
+    bool timerDone = false; 
     Uint64 startTime = 0;
     Uint64 currentTime = 0;
     Uint64 timeInSeconds = 0;
     Uint64 timer = 1;
 
     TimerComponent() = default;
+
+    TimerComponent(Uint64 time)
+    {
+        timer = time;
+    }
 
     void init() override
     {
@@ -32,11 +37,15 @@ public:
        
 	    if (timeInSeconds >= timer * CONVERT_TO_MILLISECONDS)
 	    {
-
             std::cout << "Beep beep" << std::endl;
             timerDone = true;
-            startTime = currentTime;
+            resetTimer();
 	    }
+    }
+
+    void resetTimer()
+    {
+        startTime = currentTime;
     }
 };
 
