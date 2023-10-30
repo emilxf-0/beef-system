@@ -1,0 +1,1 @@
+#include "TraitComponent.h"
