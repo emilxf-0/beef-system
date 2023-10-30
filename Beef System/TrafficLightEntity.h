@@ -1,6 +1,7 @@
 #pragma once
 #include "EntityComponentSystem.h"
 #include "Components.h"
+
 class TrafficLightEntity :
     public Entity
 {
@@ -11,6 +12,8 @@ private:
     SpriteComponent* currentLight;
 
     TimerComponent* timer;
+
+    Uint64 lightCadence = 1;
 
     enum trafficState
     {
@@ -24,6 +27,11 @@ public:
 
     TrafficLightEntity() = default;
 
+    TrafficLightEntity(Uint64 cadence)
+    {
+        lightCadence = cadence;
+    }
+
     void init() override
 	{
         redLight = &addComponent<SpriteComponent>("assets/props/red_light.png");
@@ -31,8 +39,10 @@ public:
         greenLight = &addComponent<SpriteComponent>("assets/props/green_light.png");
         currentLight = &addComponent<SpriteComponent>();
 
+        addComponent<ColliderComponent>();
+
         currentLight->setTexture(redLight->getTexture());
-        timer = &addComponent<TimerComponent>();
+        timer = &addComponent<TimerComponent>(lightCadence);
 
 	}
 
@@ -54,6 +64,11 @@ public:
             color = RED;
             break;
 	    }
+    }
+
+    trafficState getTrafficColor()
+    {
+        return color;
     }
     
 

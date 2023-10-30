@@ -18,9 +18,9 @@ Manager manager;
 
 auto& wall(manager.addEntity());
 auto& enemy(manager.addEntity());
-auto& trafficLight = manager.addEntity<TrafficLightEntity>();
+auto& trafficLight = manager.addEntity<TrafficLightEntity>(5);
 
-auto& player = manager.addEntity<CharacterEntity>("assets/cars/player_car.png");
+auto& player = manager.addEntity<CharacterEntity>("assets/cars/player_car.png", 150, 0);
 
 
 Game::Game()
@@ -71,6 +71,12 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	wall.addComponent<SpriteComponent>("assets/environment/grass.png");
 	wall.addComponent<ColliderComponent>("wall");
 
+	trafficLight.getComponent<ColliderComponent>().scaleColliderUniform(30);
+	trafficLight.getComponent<ColliderComponent>().debugCollider(true);
+
+	player.getComponent<ColliderComponent>().debugCollider(true);
+
+
 }
 
 
@@ -97,10 +103,9 @@ void Game::update(float deltaTime)
 	manager.refresh();
 	manager.update();
 
-	if (Collision::AABB(player.getComponent<ColliderComponent>().collider, wall.getComponent<ColliderComponent>().collider))
+	if (Collision::AABB(player.getComponent<ColliderComponent>().collider, trafficLight.getComponent<ColliderComponent>().collider))
 	{
-		player.getComponent<TransformComponent>().scale = 10;
-		trafficLight.switchToNextColor();
+		
 	}
 
 	if (trafficLight.getComponent<TimerComponent>().timerDone)
