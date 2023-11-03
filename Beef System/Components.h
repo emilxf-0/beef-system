@@ -6,3 +6,4 @@
 #include "Controller.h"
 #include "ColliderComponent.h"
 #include "TimerComponent.h"
+#include "TraitComponent.h"

@@ -9,10 +9,14 @@
 #include "TimerComponent.h"
 #include "TrafficLightEntity.h"
 
+
 Map* map;
 
 SDL_Renderer* Game::renderer = nullptr;
 SDL_Event Game::event;
+
+float enemyPatience;
+bool gotAngry = false;
 
 Manager manager;
 
@@ -20,7 +24,7 @@ auto& wall(manager.addEntity());
 auto& enemy(manager.addEntity());
 auto& trafficLight = manager.addEntity<TrafficLightEntity>(5);
 
-auto& player = manager.addEntity<CharacterEntity>("assets/cars/player_car.png", 150, 0);
+auto& player = manager.addEntity<CharacterEntity>("assets/cars/player_car.png", 74, 600);
 
 
 Game::Game()
@@ -66,13 +70,19 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	enemy.addComponent<TransformComponent>(200, 200);
 	enemy.addComponent<SpriteComponent>("assets/cars/enemy_car.png");
 	enemy.addComponent<ColliderComponent>("enemy");
+	enemy.addComponent<TraitComponent>();
+
+	enemyPatience = enemy.getComponent<TraitComponent>().getTrait("Patience");
+
+	std::cout << enemy.getComponent<TraitComponent>().characterTraits.traits["Anger"] << std::endl;
+
+	std::cout << "Enemy patience: " << enemyPatience << std::endl;
 
 	wall.addComponent<TransformComponent>(300.0f, 300.0f, 150, 300, 1);
 	wall.addComponent<SpriteComponent>("assets/environment/grass.png");
 	wall.addComponent<ColliderComponent>("wall");
 
 	trafficLight.getComponent<ColliderComponent>().scaleColliderUniform(30);
-	trafficLight.getComponent<ColliderComponent>().debugCollider(true);
 
 	player.getComponent<ColliderComponent>().debugCollider(true);
 
@@ -105,7 +115,16 @@ void Game::update(float deltaTime)
 
 	if (Collision::AABB(player.getComponent<ColliderComponent>().collider, trafficLight.getComponent<ColliderComponent>().collider))
 	{
-		
+		if (trafficLight.getTrafficColor() == 1)
+		{
+			if (!gotAngry)
+			{
+				enemy.getComponent<TraitComponent>().modifyTrait("Patience", -5.0f);
+				enemyPatience = enemy.getComponent<TraitComponent>().getTrait("Patience");
+				std::cout << "Enemy patience: " << enemyPatience << std::endl;
+				gotAngry = true;
+			}
+		}
 	}
 
 	if (trafficLight.getComponent<TimerComponent>().timerDone)

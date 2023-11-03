@@ -1,6 +1,7 @@
 #pragma once
 #include "EntityComponentSystem.h"
 #include <string>
+#include <fstream>
 #include <unordered_map>
 
 class TraitComponent :
@@ -47,5 +48,47 @@ public:
 		}
 	}
 
+
+	void init() override
+	{
+		readFile("assets/traits/traits.csv");
+	}
+
+	void readFile(const char* path)
+	{
+		std::ifstream inputFile(path);
+
+		if (inputFile.is_open())
+		{
+			std::string line;
+			std::getline(inputFile, line);
+
+			while (std::getline(inputFile, line))
+			{
+				std::string traitName;
+				float value;
+
+				//read CSV format
+				size_t commaPos = line.find(',');
+				if (commaPos != std::string::npos) {
+					traitName = line.substr(0, commaPos);
+					value = std::stof(line.substr(commaPos + 1));
+
+					characterTraits.traits[traitName] = value;
+				}
+
+			}
+
+			inputFile.close();
+		}
+
+		else
+		{
+			std::cerr << "Failed to open file" << std::endl;
+		}
+	}
+
 };
+
+
 

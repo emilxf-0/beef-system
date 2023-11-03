@@ -41,7 +41,7 @@ public:
 
         addComponent<ColliderComponent>();
 
-        currentLight->setTexture(redLight->getTexture());
+        currentLight->setTexture(greenLight->getTexture());
         timer = &addComponent<TimerComponent>(lightCadence);
 
 	}
