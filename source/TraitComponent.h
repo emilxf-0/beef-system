@@ -3,6 +3,9 @@
 #include <string>
 #include <fstream>
 #include <unordered_map>
+#include <nlohmann/json.hpp>
+
+using json = nlohmann::json;
 
 class TraitComponent :
     public Component
@@ -13,15 +16,40 @@ struct CharacterTraits
 
 	CharacterTraits()
 	{
-		traits["Patience"] = 100.0f;
+		traits["Anger"] = 10.0f;
+		traits["Patience"] = 90.0f;
 		traits["Vocabulary"] = 50.0f;
 	}
+
+};
+
+struct CharacterQuirks
+{
+	
 };
 
 
 public:
 
 	CharacterTraits characterTraits;
+	json traitData;
+
+	void serializeToJSON(json& data) const
+	{
+		data["Anger"] = getTrait("Anger");
+	}
+
+	void deserializeFromJSON(const json& data)
+	{
+		characterTraits.traits["Anger"] = data;
+	}
+
+	TraitComponent() = default;
+
+	TraitComponent(const char* path)
+	{
+		importTraitsCSV(path);
+	}
 
 	float getTrait(const std::string& traitName) const
 	{
@@ -48,13 +76,12 @@ public:
 		}
 	}
 
-
 	void init() override
 	{
-		readFile("assets/traits/traits.csv");
+		importTraitsCSV("assets/traits/traits.csv");
 	}
 
-	void readFile(const char* path)
+	void importTraitsCSV(const std::string& path) 
 	{
 		std::ifstream inputFile(path);
 
@@ -89,6 +116,3 @@ public:
 	}
 
 };
-
-
-

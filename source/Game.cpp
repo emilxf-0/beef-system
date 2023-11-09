@@ -72,11 +72,11 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	enemy.addComponent<ColliderComponent>("enemy");
 	enemy.addComponent<TraitComponent>();
 
-	enemyPatience = enemy.getComponent<TraitComponent>().getTrait("Patience");
+	enemyPatience = enemy.getComponent<TraitComponent>().getTrait("Anger");
 
 	std::cout << enemy.getComponent<TraitComponent>().characterTraits.traits["Anger"] << std::endl;
 
-	std::cout << "Enemy patience: " << enemyPatience << std::endl;
+	std::cout << "Enemy anger: " << enemyPatience << std::endl;
 
 	wall.addComponent<TransformComponent>(300.0f, 300.0f, 150, 300, 1);
 	wall.addComponent<SpriteComponent>("assets/environment/grass.png");
@@ -86,7 +86,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 	player.getComponent<ColliderComponent>().debugCollider(true);
 
+	enemy.getComponent<TraitComponent>().serializeToJSON(enemy.getComponent<TraitComponent>().traitData);
+	enemy.getComponent<TraitComponent>().deserializeFromJSON(enemy.getComponent<TraitComponent>().traitData);
 
+	std::cout << "Enemy anger: " << enemyPatience << std::endl;
 }
 
 
@@ -130,6 +133,8 @@ void Game::update(float deltaTime)
 	if (trafficLight.getComponent<TimerComponent>().timerDone)
 	{
 		trafficLight.switchToNextColor();
+		enemy.getComponent<TraitComponent>().modifyTrait("Patience", -5.0f);
+		enemy.getComponent<TraitComponent>().serializeToJSON(enemy.getComponent<TraitComponent>().traitData);
 	}
 }
 
