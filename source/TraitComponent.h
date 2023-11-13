@@ -41,7 +41,7 @@ public:
 
 	void deserializeFromJSON(const json& data)
 	{
-		characterTraits.traits["Anger"] = data;
+		characterTraits.traits["Anger"] = data["Anger"];
 	}
 
 	TraitComponent() = default;
