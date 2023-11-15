@@ -87,9 +87,13 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	player.getComponent<ColliderComponent>().debugCollider(true);
 
 	enemy.getComponent<TraitComponent>().serializeToJSON(enemy.getComponent<TraitComponent>().traitData);
-	enemy.getComponent<TraitComponent>().deserializeFromJSON(enemy.getComponent<TraitComponent>().traitData);
+	enemy.getComponent<TraitComponent>().loadData("assets/traits/traitData.json");
+	enemy.getComponent<TraitComponent>().deserializeFromJSON(enemy.getComponent<TraitComponent>().loadedData);
 
+	enemyPatience = enemy.getComponent<TraitComponent>().getTrait("Anger");
 	std::cout << "Enemy anger: " << enemyPatience << std::endl;
+
+	
 }
 
 

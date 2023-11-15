@@ -25,7 +25,13 @@ struct CharacterTraits
 
 struct CharacterQuirks
 {
-	
+	std::unordered_map<std::string, std::string> quirks;
+
+	CharacterQuirks()
+	{
+		quirks["Treacherous"] = "Notoriously two-faced and will betray anyone";
+	}
+
 };
 
 
@@ -33,6 +39,7 @@ public:
 
 	CharacterTraits characterTraits;
 	json traitData;
+	json loadedData;
 
 	void serializeToJSON(json& data) const
 	{
@@ -42,6 +49,21 @@ public:
 	void deserializeFromJSON(const json& data)
 	{
 		characterTraits.traits["Anger"] = data["Anger"];
+	}
+
+	void saveData(const std::string& data)
+	{
+		std::ofstream outputFile(data);
+		outputFile << std::setw(4) << traitData;
+		outputFile.close();
+	}
+
+	void loadData(const std::string& data)
+	{
+		std::ifstream inputFile(data);
+		inputFile >> loadedData;
+		inputFile.close();
+		
 	}
 
 	TraitComponent() = default;
