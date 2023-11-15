@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "EntityComponentSystem.h"
 #include "Components.h"
 class CharacterEntity :
@@ -31,7 +30,4 @@ public:
 		this->addComponent<Controller>();
 		this->addComponent<ColliderComponent>(tag);
 	}
-
-
 };
-

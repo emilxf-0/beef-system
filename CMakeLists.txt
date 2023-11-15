@@ -20,7 +20,7 @@ TimerComponent.cpp
 TrafficLightEntity.cpp
 TraitComponent.cpp
 Vector2D.cpp
-)
+ "ImportData.cpp")
 
 
 add_executable(BeefSystem main.cpp ${SOURCES})

@@ -4,6 +4,7 @@
 #include <fstream>
 #include <unordered_map>
 #include <nlohmann/json.hpp>
+#include "ImportData.h"
 
 using json = nlohmann::json;
 
@@ -36,8 +37,9 @@ struct CharacterQuirks
 
 
 public:
-
+	ImportData importer;
 	CharacterTraits characterTraits;
+	CharacterQuirks characterQuirks;
 	json traitData;
 	json loadedData;
 
@@ -68,10 +70,6 @@ public:
 
 	TraitComponent() = default;
 
-	TraitComponent(const char* path)
-	{
-		importTraitsCSV(path);
-	}
 
 	float getTrait(const std::string& traitName) const
 	{
@@ -100,41 +98,9 @@ public:
 
 	void init() override
 	{
-		importTraitsCSV("assets/traits/traits.csv");
-	}
-
-	void importTraitsCSV(const std::string& path) 
-	{
-		std::ifstream inputFile(path);
-
-		if (inputFile.is_open())
-		{
-			std::string line;
-			std::getline(inputFile, line);
-
-			while (std::getline(inputFile, line))
-			{
-				std::string traitName;
-				float value;
-
-				//read CSV format
-				size_t commaPos = line.find(',');
-				if (commaPos != std::string::npos) {
-					traitName = line.substr(0, commaPos);
-					value = std::stof(line.substr(commaPos + 1));
-
-					characterTraits.traits[traitName] = value;
-				}
-
-			}
-
-			inputFile.close();
-		}
-
-		else
-		{
-			std::cerr << "Failed to open file" << std::endl;
-		}
+		importer.importFloatData(characterTraits.traits, "assets/traits/traits.csv");
+		importer.importStringData()
+		//importTraitsCSV("assets/traits/traits.csv");
 	}
 
 };
