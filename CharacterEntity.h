@@ -49,17 +49,18 @@ public:
 		importer.saveData(filePath, entityData);
     }
 
-    //// Load the entire entity state from a file
-    //void loadEntityState(const std::string& filePath) {
-    //    json entityData;
+    // Load the entire entity state from a file
+    void loadEntityState(const std::string& filePath) {
+        json entityData;
 
-    //    // Load the entity state
-    //    importer.loadData(filePath, entityData);
+        // Load the entity state
+        importer.loadData(filePath, entityData);
 
-    //    // Deserialize each component's data
-    //    for (auto& component : components) {
-    //        component->deserializeFromJSON(entityData);
-    //    }
-    //}
+        // Deserialize each component's data
+		for (auto& component : { &getComponent<TransformComponent>() })
+		{
+			component->deserializeFromJSON(entityData);
+        }
+    }
 
 };

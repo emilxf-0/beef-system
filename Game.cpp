@@ -95,8 +95,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	enemyPatience = enemy.getComponent<TraitComponent>().getTrait("Anger");
 	std::cout << "Enemy anger: " << enemyPatience << std::endl;
 
-	player.saveEntityState("assets/entityData/entitySaveFile.json");
-	
+	player.loadEntityState("assets/entityData/entitySaveFile.json");
 }
 
 
@@ -139,6 +138,7 @@ void Game::update(float deltaTime)
 
 	if (trafficLight.getComponent<TimerComponent>().timerDone)
 	{
+		player.saveEntityState("assets/entityData/entitySaveFile.json");
 		trafficLight.switchToNextColor();
 		enemy.getComponent<TraitComponent>().modifyTrait("Patience", -5.0f);
 		enemy.getComponent<TraitComponent>().serializeToJSON(enemy.getComponent<TraitComponent>().traitData);

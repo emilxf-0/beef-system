@@ -77,3 +77,10 @@ void HandleData::saveData(const std::string &data, const json& jsonData)
 	outputFile << std::setw(4) << jsonData;
 	outputFile.close();
 }
+
+void HandleData::loadData(const std::string& data, json& jsonData)
+{
+	std::ifstream inputFile(data);
+	inputFile >> jsonData;
+	inputFile.close();
+}

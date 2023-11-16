@@ -62,5 +62,10 @@ public:
 		data["Position X"] = position.x;
 	}
 
+	void deserializeFromJSON(json& data)
+	{
+		position.x = data["Position X"];
+	}
+
 
 };
