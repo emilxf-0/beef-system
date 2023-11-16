@@ -26,7 +26,6 @@ auto& trafficLight = manager.addEntity<TrafficLightEntity>(5);
 
 auto& player = manager.addEntity<CharacterEntity>("assets/cars/player_car.png", 74, 600);
 
-
 Game::Game()
 {}
 
@@ -67,6 +66,8 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 	manager.init();
 
+
+
 	enemy.addComponent<TransformComponent>(200, 200);
 	enemy.addComponent<SpriteComponent>("assets/cars/enemy_car.png");
 	enemy.addComponent<ColliderComponent>("enemy");
@@ -87,12 +88,14 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	player.getComponent<ColliderComponent>().debugCollider(true);
 
 	enemy.getComponent<TraitComponent>().serializeToJSON(enemy.getComponent<TraitComponent>().traitData);
-	enemy.getComponent<TraitComponent>().loadData("assets/traits/traitData.json");
+    enemy.getComponent<TraitComponent>().saveData("assets/traits/traitsData.json");
+    enemy.getComponent<TraitComponent>().loadData("assets/traits/traitsData.json");
 	enemy.getComponent<TraitComponent>().deserializeFromJSON(enemy.getComponent<TraitComponent>().loadedData);
 
 	enemyPatience = enemy.getComponent<TraitComponent>().getTrait("Anger");
 	std::cout << "Enemy anger: " << enemyPatience << std::endl;
 
+	player.saveEntityState("assets/entityData/entitySaveFile.json");
 	
 }
 

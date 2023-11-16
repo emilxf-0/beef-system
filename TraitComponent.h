@@ -4,7 +4,7 @@
 #include <fstream>
 #include <unordered_map>
 #include <nlohmann/json.hpp>
-#include "ImportData.h"
+#include "HandleData.h"
 
 using json = nlohmann::json;
 
@@ -37,9 +37,10 @@ struct CharacterQuirks
 
 
 public:
-	ImportData importer;
+	HandleData importer;
 	CharacterTraits characterTraits;
 	CharacterQuirks characterQuirks;
+
 	json traitData;
 	json loadedData;
 
@@ -99,8 +100,7 @@ public:
 	void init() override
 	{
 		importer.importFloatData(characterTraits.traits, "assets/traits/traits.csv");
-		importer.importStringData()
-		//importTraitsCSV("assets/traits/traits.csv");
+		//importer.importStringData(characterQuirks.quirks, "assets/quirks/quirks.csv");
 	}
 
 };

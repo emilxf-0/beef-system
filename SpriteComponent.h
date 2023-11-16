@@ -18,7 +18,7 @@ public:
 
 	SpriteComponent() = default;
 
-	SpriteComponent(std::string path)
+	SpriteComponent(const std::string& path)
 	{
 		setTexture(path);
 	}

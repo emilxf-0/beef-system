@@ -1,7 +1,9 @@
-#include "ImportData.h"
+#include "HandleData.h"
+
+#include <iomanip>
 
 
-void ImportData::importStringData(std::unordered_map<std::string, std::string> data, const std::string& path)
+void HandleData::importStringData(std::unordered_map<std::string, std::string> &data, const std::string& path)
 {
 	std::ifstream inputFile(path);
 
@@ -17,9 +19,9 @@ void ImportData::importStringData(std::unordered_map<std::string, std::string> d
 
 			//read CSV format
 			size_t commaPos = line.find(',');
-			if (commaPos != std::string::npos) {
+			if (commaPos < line.length()) {
 				key = line.substr(0, commaPos);
-				value = std::stof(line.substr(commaPos + 1));
+				value = line.substr(commaPos + 1);
 
 				data[key] = value;
 			}
@@ -35,7 +37,7 @@ void ImportData::importStringData(std::unordered_map<std::string, std::string> d
 	}
 }
 
-void ImportData::importFloatData(std::unordered_map<std::string, float> data, const std::string& path)
+void HandleData::importFloatData(std::unordered_map<std::string, float> &data, const std::string& path)
 {
 	std::ifstream inputFile(path);
 
@@ -67,4 +69,11 @@ void ImportData::importFloatData(std::unordered_map<std::string, float> data, co
 	{
 		std::cerr << "Failed to open file" << std::endl;
 	}
+}
+
+void HandleData::saveData(const std::string &data, const json& jsonData)
+{
+	std::ofstream outputFile(data);
+	outputFile << std::setw(4) << jsonData;
+	outputFile.close();
 }

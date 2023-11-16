@@ -2,6 +2,7 @@
 
 #include "Components.h"
 #include "Vector2D.h"
+#include <unordered_map>
 
 class TransformComponent : public Component
 {
@@ -11,6 +12,8 @@ public:
 	Vector2D position;
 	Vector2D velocity;
 	Vector2D lastPosition;
+	std::unordered_map<std::string, int> transformData;
+
 
 	int height = 32;
 	int width = 32;
@@ -53,5 +56,11 @@ public:
 		position.x += velocity.x;
 		position.y += velocity.y;
 	}
+
+	void serializeToJSON(json& data)
+	{
+		data["Position X"] = position.x;
+	}
+
 
 };

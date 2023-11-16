@@ -6,7 +6,9 @@
 #include <algorithm>
 #include <bitset>
 #include <array>
+#include <nlohmann/json.hpp>
 
+using json = nlohmann::json;
 
 class Component;
 class Entity;
@@ -38,6 +40,8 @@ public:
 	virtual void init() {}
 	virtual void update() {}
 	virtual void draw(float interpolation) {}
+
+	//virtual void serializeToJSON(json& data) {}
 
 	virtual ~Component() = default;
 };
@@ -81,8 +85,15 @@ public:
 
 	template<typename T> T& getComponent() const
 	{
-		auto ptr(componentArray[getComponentTypeID<T>()]);
-		return *static_cast<T*>(ptr);
+		auto ptr = componentArray[getComponentTypeID<T>()];
+		if (ptr)
+		{
+			return *static_cast<T*>(ptr);
+		}
+		else
+		{
+			throw std::out_of_range("Component not found");
+		}
 	}
 
 
