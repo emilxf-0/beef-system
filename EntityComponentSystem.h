@@ -41,8 +41,6 @@ public:
 	virtual void update() {}
 	virtual void draw(float interpolation) {}
 
-	//virtual void serializeToJSON(json& data) {}
-
 	virtual ~Component() = default;
 };
 
@@ -96,6 +94,9 @@ public:
 		}
 	}
 
+	const std::vector<std::unique_ptr<Component>>& getComponents() const {
+		return components;
+	}
 
 private:
 	bool active = true;

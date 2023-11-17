@@ -25,6 +25,7 @@ auto& enemy(manager.addEntity());
 auto& trafficLight = manager.addEntity<TrafficLightEntity>(5);
 
 auto& player = manager.addEntity<CharacterEntity>("assets/cars/player_car.png", 74, 600);
+auto& enemy = manager.addEntity<CharacterEntity>();
 
 Game::Game()
 {}

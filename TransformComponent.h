@@ -1,10 +1,11 @@
 ﻿#pragma once
 
 #include "Components.h"
+#include "Serializable.h"
 #include "Vector2D.h"
 #include <unordered_map>
 
-class TransformComponent : public Component
+class TransformComponent : public Component, public Serializable
 {
 
 public:
@@ -57,7 +58,7 @@ public:
 		position.y += velocity.y;
 	}
 
-	void serializeToJSON(json& data)
+	void serializeToJSON(json& data) override
 	{
 		data["Position X"] = position.x;
 	}

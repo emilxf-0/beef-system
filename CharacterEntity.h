@@ -34,20 +34,24 @@ public:
 		this->addComponent<SpriteComponent>(sprite);
 		this->addComponent<Controller>();
 		this->addComponent<ColliderComponent>(tag);
+		this->addComponent<TraitComponent>();
 	}
 
     // Save the entire entity state to a file
-    void saveEntityState(const std::string& filePath) {
-        json entityData;
+	void saveEntityState(const std::string& filePath) {
+		json entityData;
 
-        // Serialize each component's data
-		for (auto& component : { &getComponent<TransformComponent>() } )
+		// Serialize each component's data
+		for (const auto& component : getComponents())
 		{
-        	component->serializeToJSON(entityData);
-        }
+			auto* serializableComponent = dynamic_cast<Serializable*>(component.get());
+			if (serializableComponent) {
+				serializableComponent->serializeToJSON(entityData);
+			}
 
-		importer.saveData(filePath, entityData);
-    }
+			importer.saveData(filePath, entityData);
+		}
+	}
 
     // Load the entire entity state from a file
     void loadEntityState(const std::string& filePath) {
@@ -57,10 +61,15 @@ public:
         importer.loadData(filePath, entityData);
 
         // Deserialize each component's data
-		for (auto& component : { &getComponent<TransformComponent>() })
+		for (const auto& component : getComponents())
 		{
-			component->deserializeFromJSON(entityData);
-        }
+			auto* serializableComponent = dynamic_cast<Serializable*>(component.get());
+			if (serializableComponent) {
+				serializableComponent->deserializeFromJSON(entityData);
+			}
+
+			importer.saveData(filePath, entityData);
+		}
     }
 
 };
