@@ -1,7 +1,7 @@
 #pragma once
 
 #include "EntityComponentSystem.h"
-#include "Components.h"
+#include "components/Components.h"
 #include "HandleData.h"
 
 class CharacterEntity :
@@ -32,7 +32,7 @@ public:
 		this->addComponent<TransformComponent>(startX, startY);
 		this->addComponent<RotationComponent>();
 		this->addComponent<SpriteComponent>(sprite);
-		this->addComponent<Controller>();
+		this->addComponent<ControllerComponent>();
 		this->addComponent<ColliderComponent>(tag);
 		this->addComponent<TraitComponent>();
 	}

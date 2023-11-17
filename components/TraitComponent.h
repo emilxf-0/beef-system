@@ -11,11 +11,11 @@ using json = nlohmann::json;
 class TraitComponent :
     public Component
 {
-struct CharacterTraits
+struct CharacterStats
 {
 	std::unordered_map<std::string, float> traits;
 
-	CharacterTraits()
+	CharacterStats()
 	{
 		traits["Anger"] = 10.0f;
 		traits["Patience"] = 90.0f;
@@ -38,7 +38,7 @@ struct CharacterQuirks
 
 public:
 	HandleData importer;
-	CharacterTraits characterTraits;
+	CharacterStats characterTraits;
 	CharacterQuirks characterQuirks;
 
 	json traitData;

@@ -7,18 +7,18 @@ find_package(SDL2_image CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 
 set(SOURCES 
-CharacterEntity.cpp
+"entities/CharacterEntity.cpp"
 Collision.cpp
-Controller.cpp
+"components/ControllerComponent.cpp"
 Game.cpp
 GameObject.cpp
 Input.cpp
 main.cpp
 Map.cpp
 TextureManager.cpp
-TimerComponent.cpp
-TrafficLightEntity.cpp
-TraitComponent.cpp
+"components/TimerComponent.cpp"
+"entities/TrafficLightEntity.cpp"
+"components/TraitComponent.cpp"
 Vector2D.cpp
 "HandleData.cpp")
 

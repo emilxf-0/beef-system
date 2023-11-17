@@ -5,7 +5,7 @@
 #include "Input.h"
 #include "Vector2D.h"
 
-class Controller : public Component
+class ControllerComponent : public Component
 {
 public:
 	TransformComponent* transform;

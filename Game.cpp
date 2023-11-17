@@ -1,14 +1,13 @@
 
 #include "Game.h"
 
-#include "CharacterEntity.h"
-#include "ColliderComponent.h"
+#include "entities/CharacterEntity.h"
+#include "components/ColliderComponent.h"
 #include "Map.h"
-#include "Components.h"
+#include "components/Components.h"
 #include "Collision.h"
-#include "TimerComponent.h"
-#include "TrafficLightEntity.h"
-
+#include "components/TimerComponent.h"
+#include "entities/TrafficLightEntity.h"
 
 Map* map;
 
@@ -25,7 +24,7 @@ auto& enemy(manager.addEntity());
 auto& trafficLight = manager.addEntity<TrafficLightEntity>(5);
 
 auto& player = manager.addEntity<CharacterEntity>("assets/cars/player_car.png", 74, 600);
-auto& enemy = manager.addEntity<CharacterEntity>();
+//auto& enemy = manager.addEntity<CharacterEntity>();
 
 Game::Game()
 {}
@@ -136,6 +135,8 @@ void Game::update(float deltaTime)
 			}
 		}
 	}
+	if (gotAngry)
+		std::cout << "Hey fuck you guy!" << std::endl;
 
 	if (trafficLight.getComponent<TimerComponent>().timerDone)
 	{

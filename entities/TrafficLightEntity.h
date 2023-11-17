@@ -1,6 +1,6 @@
 #pragma once
 #include "EntityComponentSystem.h"
-#include "Components.h"
+#include "components/Components.h"
 
 class TrafficLightEntity :
     public Entity
