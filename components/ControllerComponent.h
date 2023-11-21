@@ -17,7 +17,7 @@ public:
 	double angleInRadians = 0.0;
 
 	float const SPEED = 3;
-	float const ANGLE_INCREMENT = 1.0f;
+	float const ANGLE_INCREMENT = 3.0f;
 
 	enum drivingState
 	{
