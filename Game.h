@@ -1,6 +1,9 @@
 #pragma once
 #include "SDL.h"
 #include "SDL_image.h"
+#include "imgui.h"
+#include "imgui_impl_sdl2.h"
+#include "imgui_impl_sdlrenderer2.h"
 #include <iostream>
 
 class Game
@@ -24,5 +27,6 @@ private:
 	bool isRunning;
 	int count;
 	SDL_Window* window;
+	ImGuiContext* imguiContext;
 };
 

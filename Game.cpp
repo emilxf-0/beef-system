@@ -12,6 +12,7 @@
 Map* map;
 
 SDL_Renderer* Game::renderer = nullptr;
+
 SDL_Event Game::event;
 
 float enemyPatience;
@@ -20,13 +21,17 @@ bool gotAngry = false;
 Manager manager;
 
 auto& wall(manager.addEntity());
-auto& enemy(manager.addEntity());
 auto& trafficLight = manager.addEntity<TrafficLightEntity>(5);
 
-auto& player = manager.addEntity<CharacterEntity>("assets/cars/player_car.png", 74, 600);
-//auto& enemy = manager.addEntity<CharacterEntity>();
+auto& player = manager.addEntity<CharacterEntity>("assets/cars/player_car.png", 74, 600, true);
+auto& enemy = manager.addEntity<CharacterEntity>("assets/cars/enemy_car.png", 200, 64, false);
+auto& enemy1 = manager.addEntity<CharacterEntity>("assets/cars/enemy_car.png", 260, 64, false);
+auto& enemy2 = manager.addEntity<CharacterEntity>("assets/cars/enemy_car.png", 320, 64, false);
+auto& enemy3= manager.addEntity<CharacterEntity>("assets/cars/enemy_car.png", 380, 64, false);
+auto& enemy4 = manager.addEntity<CharacterEntity>("assets/cars/enemy_car.png", 440, 64, false);
 
-Game::Game()
+
+Game::Game() : window(nullptr)
 {}
 
 Game::~Game()
@@ -62,16 +67,18 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		isRunning = true;
 	}
 
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	imguiContext = ImGui::GetCurrentContext();
+	ImGuiIO &io = ImGui::GetIO();
+	io.Fonts->AddFontDefault();
+	io.Fonts->Build();
+	ImGui_ImplSDL2_InitForSDLRenderer(window, renderer);
+	ImGui_ImplSDLRenderer2_Init(renderer);
+
 	map = new Map();
 
 	manager.init();
-
-
-
-	enemy.addComponent<TransformComponent>(200, 200);
-	enemy.addComponent<SpriteComponent>("assets/cars/enemy_car.png");
-	enemy.addComponent<ColliderComponent>("enemy");
-	enemy.addComponent<TraitComponent>();
 
 	enemyPatience = enemy.getComponent<TraitComponent>().getTrait("Anger");
 
@@ -79,11 +86,8 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 	std::cout << "Enemy anger: " << enemyPatience << std::endl;
 
-	wall.addComponent<TransformComponent>(300.0f, 300.0f, 150, 300, 1);
-	wall.addComponent<SpriteComponent>("assets/environment/grass.png");
-	wall.addComponent<ColliderComponent>("wall");
-
-	trafficLight.getComponent<ColliderComponent>().scaleColliderUniform(30);
+	trafficLight.getComponent<ColliderComponent>().scaleColliderUniform(10);
+	trafficLight.getComponent<ColliderComponent>().debugCollider(true);
 
 	player.getComponent<ColliderComponent>().debugCollider(true);
 
@@ -103,6 +107,8 @@ void Game::handleEvents()
 {
 
 	SDL_PollEvent(&event);
+
+	ImGui_ImplSDL2_ProcessEvent(&event);
 
 	switch (event.type)
 	{
@@ -155,14 +161,45 @@ void Game::render(float interpolation)
 			return;
 	}
 
+	ImGui::SetCurrentContext(imguiContext);
+	ImGui_ImplSDLRenderer2_NewFrame();
+	ImGui_ImplSDL2_NewFrame();
+	ImGui::NewFrame();
+
+	ImGui::SetNextWindowPos(ImVec2(enemy.getComponent<TransformComponent>().position.x, enemy.getComponent<TransformComponent>().position.y + 35), ImGuiCond_Always);
+
+	// ImGui content
+	ImGui::Begin("Some asshole"); // Window title
+
+	// Add ImGui content here
+	ImGui::Text(enemy.getComponent<TraitComponent>().characterQuirks.quirks["Treacherous"].c_str());
+
+	ImGui::End();
+
+	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(1, 0, 0, 1));
+
+
+	ImGui::SetNextWindowPos(ImVec2(player.getComponent<TransformComponent>().position.x, player.getComponent<TransformComponent>().position.y + 35), ImGuiCond_Always);
+
+	ImGui::Begin("Player");
+	ImGui::Text("I'm the player");
+	ImGui::End();
+
+	ImGui::PopStyleColor(1);
+
+	ImGui::Render();
+
 	SDL_RenderClear(renderer);
 	map->DrawMap();
 	manager.draw(interpolation);
+	ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData());
 	SDL_RenderPresent(renderer);
 }
 
 void Game::clean()
 {
+	ImGui_ImplSDL2_Shutdown();
+	ImGui::DestroyContext();
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
 	SDL_Quit();
