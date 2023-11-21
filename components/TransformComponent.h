@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "Components.h"
-#include "Serializable.h"
+#include "data/Serializable.h"
 #include "Vector2D.h"
 #include <unordered_map>
 
@@ -61,11 +61,13 @@ public:
 	void serializeToJSON(json& data) override
 	{
 		data["Position X"] = position.x;
+		data["Position Y"] = position.y;
 	}
 
-	void deserializeFromJSON(json& data)
+	void deserializeFromJSON(json& data) override
 	{
 		position.x = data["Position X"];
+		position.y = data["Position Y"];
 	}
 
 
