@@ -2,7 +2,7 @@
 
 #include "EntityComponentSystem.h"
 #include "components/Components.h"
-#include "HandleData.h"
+#include "data/HandleData.h"
 
 class CharacterEntity :
     public Entity
@@ -17,14 +17,16 @@ public:
 	float startY = 0;
 	float rotation;
 	std::string tag = "character";
+	bool hasController = false;
 
 	CharacterEntity() = default;
 
-	CharacterEntity(const std::string& sprite, float x, float y)
+	CharacterEntity(const std::string& sprite, float x, float y, bool controller)
 	{
 		this->sprite = sprite;
 		startX = x;
 		startY = y;
+		hasController = controller;
 	}
 
 	void init() override
@@ -32,9 +34,13 @@ public:
 		this->addComponent<TransformComponent>(startX, startY);
 		this->addComponent<RotationComponent>();
 		this->addComponent<SpriteComponent>(sprite);
-		this->addComponent<ControllerComponent>();
 		this->addComponent<ColliderComponent>(tag);
 		this->addComponent<TraitComponent>();
+
+		if (!hasController)
+			return;
+
+		this->addComponent<ControllerComponent>();
 	}
 
     // Save the entire entity state to a file
