@@ -7,8 +7,8 @@ constexpr int LEVELWIDTH = 25;
 int level1[LEVELHEIGHT][LEVELWIDTH] = {
 	{0,3,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 	{0,3,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-	{4,3,2,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-	{0,3,2,5,5,5,5,5,5,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+	{4,3,2,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4},
+	{5,3,2,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5},
 	{0,3,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 	{0,3,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 	{0,3,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -90,10 +90,10 @@ void Map::DrawMap()
 				TextureManager::Draw(road, src, dest, 0, SDL_FLIP_HORIZONTAL);
 				break;
 			case 4:
-				TextureManager::Draw(road, src, dest, 90, SDL_FLIP_NONE);
+				TextureManager::Draw(road, src, dest, 90, SDL_FLIP_HORIZONTAL);
 				break;
 			case 5:
-				TextureManager::Draw(road, src, dest, 90, SDL_FLIP_VERTICAL);
+				TextureManager::Draw(road, src, dest, 90, SDL_FLIP_NONE);
 				break;
 			default:
 				break;
