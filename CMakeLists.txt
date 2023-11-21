@@ -5,6 +5,7 @@ project(BeefSystem)
 find_package(SDL2 CONFIG REQUIRED)
 find_package(SDL2_image CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
+find_package(imgui CONFIG REQUIRED)
 
 set(SOURCES 
 "entities/CharacterEntity.cpp"
@@ -20,7 +21,7 @@ TextureManager.cpp
 "entities/TrafficLightEntity.cpp"
 "components/TraitComponent.cpp"
 Vector2D.cpp
-"HandleData.cpp")
+"data/HandleData.cpp")
 
 
 add_executable(BeefSystem main.cpp ${SOURCES})
@@ -43,4 +44,4 @@ add_custom_command(
     DEPENDS copy_assets
 )
 
-target_link_libraries(BeefSystem PRIVATE SDL2::SDL2 SDL2::SDL2main SDL2_image::SDL2_image nlohmann_json::nlohmann_json)
+target_link_libraries(BeefSystem PRIVATE SDL2::SDL2 SDL2::SDL2main SDL2_image::SDL2_image nlohmann_json::nlohmann_json imgui::imgui)

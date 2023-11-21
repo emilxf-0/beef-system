@@ -4,7 +4,7 @@
 #include "SDL.h"
 #include "TextureManager.h"
 
-class RotationComponent : public Component
+class RotationComponent : public Component, public Serializable
 {
 
 public:
@@ -29,4 +29,15 @@ public:
 	{
 		//angle += 1;
 	}
+
+	void serializeToJSON(json& data) override
+	{
+		data["Angle"] = angle;
+	}
+
+	void deserializeFromJSON(json& data) override
+	{
+		angle = data["Angle"];
+	}
+	
 };

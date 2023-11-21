@@ -4,7 +4,7 @@
 #include <fstream>
 #include <unordered_map>
 #include <nlohmann/json.hpp>
-#include "HandleData.h"
+#include "data/HandleData.h"
 
 using json = nlohmann::json;
 
@@ -46,6 +46,10 @@ public:
 
 	void serializeToJSON(json& data) const
 	{
+		for (auto data : data)
+		{
+			
+		}
 		data["Anger"] = getTrait("Anger");
 	}
 
@@ -100,7 +104,7 @@ public:
 	void init() override
 	{
 		importer.importFloatData(characterTraits.traits, "assets/traits/traits.csv");
-		//importer.importStringData(characterQuirks.quirks, "assets/quirks/quirks.csv");
+		importer.importStringData(characterQuirks.quirks, "assets/quirks/quirks.csv");
 	}
 
 };
