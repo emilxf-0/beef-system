@@ -13,9 +13,7 @@ private:
 public:
 
 	TextBoxComponent() = default;
-
-	TextBoxComponent(ImGuiContext* imguiContext) : imguiContext(imguiContext) {}
-
+	
 	void draw(float interpolation) override
 	{
 
