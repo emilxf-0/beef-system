@@ -16,7 +16,7 @@ public:
 	Vector2D direction = Vector2D(0, 0);
 	double angleInRadians = 0.0;
 
-	float const SPEED = 3;
+	float speed = 3;
 	float const ANGLE_INCREMENT = 3.0f;
 
 	bool playerController = true;
@@ -49,6 +49,11 @@ public:
 		updateDirection();
 		updateRotation();
 		updateVelocity();
+	}
+
+	void setSpeed(float speed)
+	{
+		this->speed = speed;
 	}
 
 private:
@@ -119,13 +124,13 @@ private:
 			break;
 
 		case FORWARD:
-			transform->velocity.x = direction.x * SPEED;
-			transform->velocity.y = direction.y * SPEED;
+			transform->velocity.x = direction.x * speed;
+			transform->velocity.y = direction.y * speed;
 			break;
 
 		case REVERSE:
-			transform->velocity.x = -direction.x * SPEED;
-			transform->velocity.y = -direction.y * SPEED;
+			transform->velocity.x = -direction.x * speed;
+			transform->velocity.y = -direction.y * speed;
 			break;
 
 		default:
@@ -133,5 +138,7 @@ private:
 		}
 
 	}
+
+
 
 };
