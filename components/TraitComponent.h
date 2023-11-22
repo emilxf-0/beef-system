@@ -13,13 +13,13 @@ class TraitComponent :
 {
 struct CharacterStats
 {
-	std::unordered_map<std::string, float> traits;
+	std::unordered_map<std::string, float> stats;
 
 	CharacterStats()
 	{
-		traits["Anger"] = 10.0f;
-		traits["Patience"] = 90.0f;
-		traits["Vocabulary"] = 50.0f;
+		stats["Anger"] = 10.0f;
+		stats["Patience"] = 90.0f;
+		stats["Vocabulary"] = 50.0f;
 	}
 
 };
@@ -35,10 +35,18 @@ struct CharacterQuirks
 
 };
 
+struct CharacterTraits
+{
+	std::unordered_map<std::string, std::string> traits;
+
+	CharacterTraits() = default;
+};
+
 
 public:
 	HandleData importer;
-	CharacterStats characterTraits;
+	CharacterStats characterStats;
+	CharacterTraits characterTraits;
 	CharacterQuirks characterQuirks;
 
 	json traitData;
@@ -46,12 +54,12 @@ public:
 
 	void serializeToJSON(json& data) const
 	{
-		data["Anger"] = getTrait("Anger");
+		data["Anger"] = getStats("Anger");
 	}
 
 	void deserializeFromJSON(const json& data)
 	{
-		characterTraits.traits["Anger"] = data["Anger"];
+		characterStats.stats["Anger"] = data["Anger"];
 	}
 
 	void saveData(const std::string& data)
@@ -72,7 +80,19 @@ public:
 	TraitComponent() = default;
 
 
-	float getTrait(const std::string& traitName) const
+
+	float getStats(const std::string& traitName) const
+	{
+		auto stat = characterStats.stats.find(traitName);
+		if (stat != characterStats.stats.end())
+		{
+			return stat->second;
+		}
+
+		return 50.0f;
+	}
+
+	std::string getTrait(const std::string& traitName) const
 	{
 		auto trait = characterTraits.traits.find(traitName);
 		if (trait != characterTraits.traits.end())
@@ -80,27 +100,54 @@ public:
 			return trait->second;
 		}
 
-		return 50.0f;
+		return "Sort of blank and dead inside";
+	}
+
+	std::string getQuirk(const std::string& traitName) const
+	{
+		auto quirk = characterQuirks.quirks.find(traitName);
+		if (quirk != characterQuirks.quirks.end())
+		{
+			return quirk->second;
+		}
+
+		return "Just a regular citizen";
 	}
 
 	void setTrait(const std::string& traitName, float value)
 	{
-		characterTraits.traits[traitName] = value;
+		characterStats.stats[traitName] = value;
 	}
 
 	void modifyTrait(const std::string& traitName, float value)
 	{
-		auto trait = characterTraits.traits.find(traitName);
-		if (trait != characterTraits.traits.end())
+		auto trait = characterStats.stats.find(traitName);
+		if (trait != characterStats.stats.end())
 		{
-			characterTraits.traits[traitName] += value;
+			characterStats.stats[traitName] += value;
 		}
 	}
 
 	void init() override
 	{
-		importer.importFloatData(characterTraits.traits, "assets/traits/traits.csv");
-		importer.importStringData(characterQuirks.quirks, "assets/quirks/quirks.csv");
+		loadStats("assets/stats/stats.csv");
+		loadTraits("assets/traits/traits.csv");
+		loadQuirks("assets/quirks/quirks.csv");
+	}
+
+	void loadStats(const std::string& path)
+	{
+		importer.importFloatData(characterStats.stats, path);
+	}
+
+	void loadTraits(const std::string& path)
+	{
+		importer.importStringData(characterTraits.traits, path);
+	}
+
+	void loadQuirks(const std::string& path)
+	{
+		importer.importStringData(characterQuirks.quirks, path);
 	}
 
 };
