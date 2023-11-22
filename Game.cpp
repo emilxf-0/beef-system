@@ -17,11 +17,15 @@ SDL_Event Game::event;
 
 float enemyPatience;
 bool gotAngry = false;
+const char* enemyNickName = "Some guy";
+
+float playerAnger;
 
 Manager manager;
 
 auto& wall(manager.addEntity());
 auto& trafficLight = manager.addEntity<TrafficLightEntity>(5);
+auto& house(manager.addEntity());
 
 auto& player = manager.addEntity<CharacterEntity>("assets/cars/player_car.png", 74, 600, true);
 auto& enemy = manager.addEntity<CharacterEntity>("assets/cars/enemy_car.png", 200, 64, false);
@@ -82,9 +86,6 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 	enemyPatience = enemy.getComponent<TraitComponent>().getTrait("Anger");
 
-	std::cout << enemy.getComponent<TraitComponent>().characterTraits.traits["Anger"] << std::endl;
-
-	std::cout << "Enemy anger: " << enemyPatience << std::endl;
 
 	trafficLight.getComponent<ColliderComponent>().scaleColliderUniform(10);
 	trafficLight.getComponent<ColliderComponent>().debugCollider(true);
@@ -96,8 +97,13 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
     enemy.getComponent<TraitComponent>().loadData("assets/traits/traitsData.json");
 	enemy.getComponent<TraitComponent>().deserializeFromJSON(enemy.getComponent<TraitComponent>().loadedData);
 
+	house.addComponent<TransformComponent>(300, 200, 100, 100, 2);
+	house.addComponent<SpriteComponent>("assets/environment/house.png");
+	house.addComponent<TextBoxComponent>(imguiContext);
+
 	enemyPatience = enemy.getComponent<TraitComponent>().getTrait("Anger");
-	std::cout << "Enemy anger: " << enemyPatience << std::endl;
+
+	playerAnger = player.getComponent<TraitComponent>().getTrait("Anger");
 
 	player.loadEntityState("assets/entityData/entitySaveFile.json");
 }
@@ -128,6 +134,8 @@ void Game::update(float deltaTime)
 	manager.refresh();
 	manager.update();
 
+	playerAnger = player.getComponent<TraitComponent>().getTrait("Anger");
+
 	if (Collision::AABB(player.getComponent<ColliderComponent>().collider, trafficLight.getComponent<ColliderComponent>().collider))
 	{
 		if (trafficLight.getTrafficColor() == 1)
@@ -151,6 +159,15 @@ void Game::update(float deltaTime)
 		enemy.getComponent<TraitComponent>().modifyTrait("Patience", -5.0f);
 		enemy.getComponent<TraitComponent>().serializeToJSON(enemy.getComponent<TraitComponent>().traitData);
 	}
+
+	if (playerAnger < 50)
+	{
+		enemyNickName = "Fucking asshole";
+	}
+	else
+	{
+		enemyNickName = "Some Guy";
+	}
 }
 
 
@@ -169,7 +186,7 @@ void Game::render(float interpolation)
 	ImGui::SetNextWindowPos(ImVec2(enemy.getComponent<TransformComponent>().position.x, enemy.getComponent<TransformComponent>().position.y + 35), ImGuiCond_Always);
 
 	// ImGui content
-	ImGui::Begin("Some asshole"); // Window title
+	ImGui::Begin(enemyNickName, nullptr, ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoFocusOnAppearing); // Window title
 
 	// Add ImGui content here
 	ImGui::Text(enemy.getComponent<TraitComponent>().characterQuirks.quirks["Treacherous"].c_str());
@@ -183,15 +200,22 @@ void Game::render(float interpolation)
 
 	ImGui::Begin("Player");
 	ImGui::Text("I'm the player");
+	ImGui::SliderFloat("Anger", &playerAnger, 0.0f, 100.0f);
 	ImGui::End();
+	player.getComponent<TraitComponent>().setTrait("Anger", playerAnger);
+	player.saveEntityState("assets/entityData/playerSaveFile.json");
 
+	
 	ImGui::PopStyleColor(1);
 
-	ImGui::Render();
+	// Render ImGui content for TextBoxComponent
+
+
 
 	SDL_RenderClear(renderer);
 	map->DrawMap();
 	manager.draw(interpolation);
+	ImGui::Render();
 	ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData());
 	SDL_RenderPresent(renderer);
 }

@@ -46,10 +46,6 @@ public:
 
 	void serializeToJSON(json& data) const
 	{
-		for (auto data : data)
-		{
-			
-		}
 		data["Anger"] = getTrait("Anger");
 	}
 
@@ -84,7 +80,7 @@ public:
 			return trait->second;
 		}
 
-		return 0.0f;
+		return 50.0f;
 	}
 
 	void setTrait(const std::string& traitName, float value)

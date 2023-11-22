@@ -7,4 +7,5 @@
 #include "components/ColliderComponent.h"
 #include "components/TimerComponent.h"
 #include "components/TraitComponent.h"
+#include "components/TextBoxComponent.h"
 
