@@ -19,6 +19,15 @@ public:
 	float const SPEED = 3;
 	float const ANGLE_INCREMENT = 3.0f;
 
+	bool playerController = true;
+
+	ControllerComponent() = default;
+
+	ControllerComponent(bool isPlayer)
+	{
+		playerController = isPlayer;
+	}
+
 	enum drivingState
 	{
 		IDLE,
@@ -37,7 +46,6 @@ public:
 
 	void update() override
 	{
-
 		updateDirection();
 		updateRotation();
 		updateVelocity();
@@ -51,6 +59,12 @@ private:
 		direction.x = SDL_cos(angleInRadians);
 		direction.y = SDL_sin(angleInRadians);
 		direction.normalize();
+
+		if(!playerController)
+		{
+			drivingDirection = FORWARD;
+			return;
+		}
 
 		if (keyBoardState[SDL_SCANCODE_W])
 		{
@@ -69,6 +83,9 @@ private:
 
 	void updateRotation()
 	{
+		if (!playerController)
+			return;
+
 		if (keyBoardState[SDL_SCANCODE_A])
 		{
 			if (drivingDirection == REVERSE)

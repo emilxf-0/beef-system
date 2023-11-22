@@ -56,6 +56,9 @@ public:
 		lastPosition = position;
 		position.x += velocity.x;
 		position.y += velocity.y;
+
+		if (position.x > 800)
+			position.x = 0;
 	}
 
 	void serializeToJSON(json& data) override
