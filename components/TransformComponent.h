@@ -59,6 +59,9 @@ public:
 
 		if (position.x > 800)
 			position.x = 0;
+
+		if (position.y < -35)
+			position.y = 640;
 	}
 
 	void serializeToJSON(json& data) override
