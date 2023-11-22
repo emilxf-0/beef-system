@@ -7,11 +7,14 @@ int main(int argc, char* argv[])
 	const int FPS = 60;
 	const int MS_PER_UPDATE = 1000 / FPS;
 
+	static const int WIDTH = 800;
+	static const int HEIGHT = 640;
+
 	Uint64 currentTime;
 
 	game = new Game();
 
-	game->init("Beef game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 640, false);
+	game->init("Beef game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, false);
 
 	float previousTime = SDL_GetTicks64();
 	float lag = 0.0f;
