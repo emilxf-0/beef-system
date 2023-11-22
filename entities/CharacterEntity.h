@@ -38,8 +38,10 @@ public:
 		this->addComponent<TraitComponent>();
 
 		if (!hasController)
+		{
+			this->addComponent<ControllerComponent>(false);
 			return;
-
+		}
 		this->addComponent<ControllerComponent>();
 	}
 
