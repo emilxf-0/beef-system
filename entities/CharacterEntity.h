@@ -15,24 +15,25 @@ public:
 	std::string sprite = "assets/default.png";
 	float startX = 0;
 	float startY = 0;
-	float rotation;
+	float rotation = 0;
 	std::string tag = "character";
 	bool hasController = false;
 
 	CharacterEntity() = default;
 
-	CharacterEntity(const std::string& sprite, float x, float y, bool controller)
+	CharacterEntity(const std::string& sprite, float x, float y, float rotation, bool controller)
 	{
 		this->sprite = sprite;
 		startX = x;
 		startY = y;
 		hasController = controller;
+		this->rotation = rotation;
 	}
 
 	void init() override
 	{
 		this->addComponent<TransformComponent>(startX, startY);
-		this->addComponent<RotationComponent>();
+		this->addComponent<RotationComponent>(rotation);
 		this->addComponent<SpriteComponent>(sprite);
 		this->addComponent<ColliderComponent>(tag);
 		this->addComponent<TraitComponent>();
