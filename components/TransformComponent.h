@@ -18,7 +18,7 @@ public:
 
 	int height = 32;
 	int width = 32;
-	int scale = 1;
+	int scale = 2;
 
 	int speed = 3;
 
@@ -57,11 +57,11 @@ public:
 		position.x += velocity.x;
 		position.y += velocity.y;
 
-		if (position.x > 800)
+		if (position.x > 1600)
 			position.x = 0;
 
 		if (position.y < -35)
-			position.y = 640;
+			position.y = 1280;
 	}
 
 	void serializeToJSON(json& data) override

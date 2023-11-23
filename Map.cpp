@@ -36,8 +36,8 @@ Map::Map()
 	LoadMap(level1);
 
 	src.x = src.y = 0;
-	src.w = dest.w = 32;
-	src.h = dest.h = 32;
+	src.w = dest.w = 64;
+	src.h = dest.h = 64;
 
 	dest.x = dest.y = 0;
 }
@@ -72,8 +72,8 @@ void Map::DrawMap()
 			type = map[row][column];
 
 			//Updates the position of the next square by 32 pixels
-			dest.x = column * 32;
-			dest.y = row * 32;
+			dest.x = column * 64;
+			dest.y = row * 64;
 
 			switch (type)
 			{

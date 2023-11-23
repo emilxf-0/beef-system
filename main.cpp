@@ -7,8 +7,8 @@ int main(int argc, char* argv[])
 	const int FPS = 60;
 	const int MS_PER_UPDATE = 1000 / FPS;
 
-	static const int WIDTH = 800;
-	static const int HEIGHT = 640;
+	static const int WIDTH = 1600;
+	static const int HEIGHT = 1280;
 
 	Uint64 currentTime;
 

@@ -32,15 +32,17 @@ float playerPatience;
 float playerIntelligence;
 float playerStrength;
 float playerPerception;
+bool playerVerbose;
+bool playerPolite;
 
 Manager manager;
 
 auto& trafficLight = manager.addEntity<TrafficLightEntity>(5);
 auto& house(manager.addEntity());
 
-auto& player = manager.addEntity<CharacterEntity>("assets/cars/player_car.png", 74, 600, 90, true);
-auto& douche = manager.addEntity<CharacterEntity>("assets/cars/blue_car.png", 200, 64, 0, false);
-auto& oldLady = manager.addEntity<CharacterEntity>("assets/cars/enemy_car.png", 710, 300, -90, false);
+auto& player = manager.addEntity<CharacterEntity>("assets/cars/player_car.png", 148, 1200, 90, true);
+auto& douche = manager.addEntity<CharacterEntity>("assets/cars/blue_car.png", 400, 128, 0, false);
+auto& oldLady = manager.addEntity<CharacterEntity>("assets/cars/enemy_car.png", 1410, 600, -90, false);
 
 Game::Game() : window(nullptr)
 {}
@@ -58,9 +60,9 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 	if(SDL_Init(SDL_INIT_EVERYTHING) == 0)
 	{
-		std::cout << "Subsystems initialized..." << std::endl;
+		std::cout << "Initialize game..." << std::endl;
 
-		window = SDL_CreateWindow(title, xpos, ypos, width, height, flag);
+		window = SDL_CreateWindow("Beef System", xpos, ypos, width, height, flag);
 
 		if(window)
 		{
@@ -97,15 +99,13 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	doucheText = douche.getComponent<TraitComponent>().getQuirk("Normal");
 	oldLadyText = oldLady.getComponent<TraitComponent>().getQuirk("Senile");
 
-
 	trafficLight.getComponent<ColliderComponent>().scaleColliderUniform(10);
-	trafficLight.getComponent<ColliderComponent>().debugCollider(true);
+	//trafficLight.getComponent<ColliderComponent>().debugCollider(true);
 
-	player.getComponent<ColliderComponent>().debugCollider(true);
-
-	house.addComponent<TransformComponent>(300, 200, 100, 100, 2);
+	house.addComponent<TransformComponent>(600, 400, 200, 200, 2);
 	house.addComponent<SpriteComponent>("assets/environment/house.png");
-	house.addComponent<TextBoxComponent>();
+
+	player.loadEntityState("assets/entityData/playerSaveFile.json");
 
 	//Set player Stats
 	playerInfo = player.getComponent<TraitComponent>();
@@ -114,8 +114,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	playerIntelligence = playerInfo.getStats("Intelligence");
 	playerStrength = playerInfo.getStats("Strength");
 	playerPerception = playerInfo.getStats("Perception");
+	playerVerbose = playerInfo.getTrait("Verbose");
+	playerPolite = playerInfo.getTrait("Polite");
+	//playerVerbose = playerInfo.getTrait("Verbose");
 
-	player.loadEntityState("assets/entityData/entitySaveFile.json");
 }
 
 
@@ -152,9 +154,8 @@ void Game::update(float deltaTime)
 		{
 			if (!gotAngry)
 			{
-				douche.getComponent<TraitComponent>().modifyTrait("Patience", -5.0f);
+				douche.getComponent<TraitComponent>().modifyStats("Patience", -5.0f);
 				enemyPatience = douche.getComponent<TraitComponent>().getStats("Patience");
-				std::cout << "Enemy patience: " << enemyPatience << std::endl;
 				gotAngry = true;
 			}
 		}
@@ -162,9 +163,8 @@ void Game::update(float deltaTime)
 
 	if (trafficLight.getComponent<TimerComponent>().timerDone)
 	{
-		player.saveEntityState("assets/entityData/entitySaveFile.json");
 		trafficLight.switchToNextColor();
-		douche.getComponent<TraitComponent>().modifyTrait("Patience", -5.0f);
+		douche.getComponent<TraitComponent>().modifyStats("Patience", -5.0f);
 		douche.getComponent<TraitComponent>().serializeToJSON(douche.getComponent<TraitComponent>().traitData);
 	}
 
@@ -173,24 +173,47 @@ void Game::update(float deltaTime)
 	if (playerAnger > 50)
 	{
 		doucheNickName = "Fucking asshole";
-		doucheText = "A particularly vile piece of human excrement";
+		doucheText = "What a piece of shit";
+
+		if (playerVerbose)
+		{
+			doucheText = "A particularly vile piece of human excrement";
+		}
 	}
 	else
 	{
 		doucheNickName = "Some Guy";
-		doucheText = "I'll suffer his existence";
+		doucheText = "Just a regular, everyday, normal dude";
 	}
 
 	if (playerPerception > 80)
 	{
-		oldLadyNickName = "Bag o' bones";
-		oldLadyText = "Wait a minute... That bitch is senile";
+		if (playerPolite)
+		{
+			oldLadyNickName = "Poor woman";
+			oldLadyText = "Wait a minute... She's clearly suffering from dementia";
+		}
+		else
+		{
+			oldLadyNickName = "Bag o' bones";
+			oldLadyText = "Wait a minute... That bitch is senile";
+		}
+
 
 		if (playerPerception > 90)
 		{
-			oldLadyNickName = "1000 year old psychopath";
-			oldLadyText = "Oh, she's not senile. She just " + oldLady.getComponent<TraitComponent>().getQuirk("Psychopath");
+			if (playerPolite)
+			{
+				oldLadyNickName = "Geriatric Psycho killer";
+				oldLadyText = "My God! She's not ill, she drove over those people on purpose";
+			}
+			else
+			{
+				oldLadyNickName = "1000 year old psychopath";
+				oldLadyText = "Oh, she's not senile. She just mowed down those dumb-ass school kids in cold blood";
+			}
 		}
+
 	}
 
 	else
@@ -198,6 +221,7 @@ void Game::update(float deltaTime)
 		oldLadyNickName = "A sweet old lady";
 		oldLadyText = "What a dearie";
 	}
+
 }
 
 
@@ -214,22 +238,22 @@ void Game::render(float interpolation)
 	ImGui::NewFrame();
 
 	//Douchebag Information Window
-	ImGui::SetNextWindowPos(ImVec2(douche.getComponent<TransformComponent>().position.x, douche.getComponent<TransformComponent>().position.y + 35), ImGuiCond_Always);
+	ImGui::SetNextWindowPos(ImVec2(douche.getComponent<TransformComponent>().position.x, douche.getComponent<TransformComponent>().position.y + 70), ImGuiCond_Always);
 	ImGui::SetNextWindowSize(ImVec2(200, 100));
 	ImGui::Begin(doucheNickName, nullptr, ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoFocusOnAppearing); // Window title
 	ImGui::TextWrapped(doucheText.c_str());
 	ImGui::End();
 
 	//Old lady Information Window
-	ImGui::SetNextWindowPos(ImVec2(oldLady.getComponent<TransformComponent>().position.x -140, oldLady.getComponent<TransformComponent>().position.y + 35), ImGuiCond_Always);
+	ImGui::SetNextWindowPos(ImVec2(oldLady.getComponent<TransformComponent>().position.x -200, oldLady.getComponent<TransformComponent>().position.y), ImGuiCond_Always);
 	ImGui::SetNextWindowSize(ImVec2(200, 100));
 	ImGui::Begin(oldLadyNickName, nullptr, ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoFocusOnAppearing); // Window title
 	ImGui::TextWrapped(oldLadyText.c_str());
 	ImGui::End();
 
 	//Player Information window
-	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(1, 0, 0, 1));
-	ImGui::SetNextWindowPos(ImVec2(player.getComponent<TransformComponent>().position.x, player.getComponent<TransformComponent>().position.y + 35), ImGuiCond_Always);
+	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.3f, 0.3f, 0.3f, 1));
+	ImGui::SetNextWindowPos(ImVec2(player.getComponent<TransformComponent>().position.x, player.getComponent<TransformComponent>().position.y + 70), ImGuiCond_Always);
 
 	ImGui::Begin("Player");
 	ImGui::Text("I'm the player");
@@ -238,14 +262,20 @@ void Game::render(float interpolation)
 	ImGui::SliderFloat("Intelligence", &playerIntelligence, 0.0f, 100.0f);
 	ImGui::SliderFloat("Strength", &playerStrength, 0.0f, 100.0f);
 	ImGui::SliderFloat("Perception", &playerPerception, 0.0f, 100.0f);
+	ImGui::Checkbox("Verbose", &playerVerbose);
+	ImGui::Checkbox("Polite", &playerPolite);
+
 	ImGui::End();
 
 	//Set Player Traits
-	player.getComponent<TraitComponent>().setTrait("Anger", playerAnger);
-	player.getComponent<TraitComponent>().setTrait("Patience", playerPatience);
-	player.getComponent<TraitComponent>().setTrait("Intelligence", playerIntelligence);
-	player.getComponent<TraitComponent>().setTrait("Strength", playerStrength);
-	player.getComponent<TraitComponent>().setTrait("Perception", playerPerception);
+	player.getComponent<TraitComponent>().setStats("Anger", playerAnger);
+	player.getComponent<TraitComponent>().setStats("Patience", playerPatience);
+	player.getComponent<TraitComponent>().setStats("Intelligence", playerIntelligence);
+	player.getComponent<TraitComponent>().setStats("Strength", playerStrength);
+	player.getComponent<TraitComponent>().setStats("Perception", playerPerception);
+	player.getComponent<TraitComponent>().setTrait("Verbose", playerVerbose);
+	player.getComponent<TraitComponent>().setTrait("Polite", playerPolite);
+	
 	player.saveEntityState("assets/entityData/playerSaveFile.json");
 
 	

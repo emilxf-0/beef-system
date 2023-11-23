@@ -5,11 +5,12 @@
 #include <unordered_map>
 #include <nlohmann/json.hpp>
 #include "data/HandleData.h"
+#include "data/Serializable.h"
 
 using json = nlohmann::json;
 
 class TraitComponent :
-    public Component
+    public Component, public Serializable
 {
 struct CharacterStats
 {
@@ -37,7 +38,7 @@ struct CharacterQuirks
 
 struct CharacterTraits
 {
-	std::unordered_map<std::string, std::string> traits;
+	std::unordered_map<std::string, bool> traits;
 
 	CharacterTraits() = default;
 };
@@ -52,14 +53,30 @@ public:
 	json traitData;
 	json loadedData;
 
-	void serializeToJSON(json& data) const
+	void serializeToJSON(json& data) override
 	{
 		data["Anger"] = getStats("Anger");
+		data["Patience"] = getStats("Patience");
+		data["Intelligence"] = getStats("Intelligence");
+		data["Strength"] = getStats("Strength");
+		data["Perception"] = getStats("Perception");
+
+		data["Verbose"] = json::boolean_t(getTrait("Verbose"));
 	}
 
-	void deserializeFromJSON(const json& data)
+	void deserializeFromJSON(json& data) override
 	{
 		characterStats.stats["Anger"] = data["Anger"];
+
+		setStats("Patience", data["Patience"]);
+		setStats("Intelligence", data["Intelligence"]);
+		setStats("Strength", data["Strength"]);
+		setStats("Perception", data["Perception"]);
+
+		if (data.contains("Verbose") && data["Verbose"].is_boolean())
+		{
+			setTrait("Verbose", data["Verbose"].get<bool>());
+		}
 	}
 
 	void saveData(const std::string& data)
@@ -92,7 +109,7 @@ public:
 		return 50.0f;
 	}
 
-	std::string getTrait(const std::string& traitName) const
+	bool getTrait(const std::string& traitName) const
 	{
 		auto trait = characterTraits.traits.find(traitName);
 		if (trait != characterTraits.traits.end())
@@ -100,7 +117,7 @@ public:
 			return trait->second;
 		}
 
-		return "Sort of blank and dead inside";
+		return false;
 	}
 
 	std::string getQuirk(const std::string& traitName) const
@@ -114,12 +131,17 @@ public:
 		return "Just a regular citizen";
 	}
 
-	void setTrait(const std::string& traitName, float value)
+	void setStats(const std::string& traitName, float value)
 	{
 		characterStats.stats[traitName] = value;
 	}
 
-	void modifyTrait(const std::string& traitName, float value)
+	void setTrait(const std::string& traitName, bool value)
+	{
+		characterTraits.traits[traitName] = value;
+	}
+
+	void modifyStats(const std::string& traitName, float value)
 	{
 		auto trait = characterStats.stats.find(traitName);
 		if (trait != characterStats.stats.end())
@@ -142,7 +164,7 @@ public:
 
 	void loadTraits(const std::string& path)
 	{
-		importer.importStringData(characterTraits.traits, path);
+		importer.importBoolData(characterTraits.traits, path);
 	}
 
 	void loadQuirks(const std::string& path)

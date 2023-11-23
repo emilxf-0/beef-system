@@ -67,7 +67,7 @@ public:
         json entityData;
 
         // Load the entity state
-        importer.loadData(filePath, entityData);
+		importer.loadData(filePath, entityData);
 
         // Deserialize each component's data
 		for (const auto& component : getComponents())
@@ -76,8 +76,6 @@ public:
 			if (serializableComponent) {
 				serializableComponent->deserializeFromJSON(entityData);
 			}
-
-			importer.saveData(filePath, entityData);
 		}
     }
 
